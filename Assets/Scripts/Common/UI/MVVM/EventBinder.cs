@@ -159,16 +159,13 @@ namespace MVVM
             }
             
             var p = new object[] { triggerDelegate };
-
-            bool isSuccess = true;
+            
             try
             {
                 removeListenerMethod.Invoke(eventObj, p);
-                
             }
             catch (Exception e)
             {
-                isSuccess = false;
                 Console.WriteLine(e);
                 throw;
             }
@@ -217,8 +214,7 @@ namespace MVVM
                 Debug.LogError($"绑定组件事件AddListener方法不合规, component:{component.GetType()}, eventName:{eventName}, {errorTip}");
                 return false;
             }
-            
-            
+
             //判断监听方法的参数类型
             var eventArgTypes = eventType.GetGenericArguments();
             var triggerMethodInfo = DataBindUtil.GetMethodInfo(_viewModel, triggerMethodName);
