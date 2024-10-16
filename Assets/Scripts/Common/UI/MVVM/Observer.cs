@@ -1,6 +1,6 @@
 using System;
 
-namespace MVVM
+namespace TTT
 {
     public class Observer
     {

@@ -1,25 +1,26 @@
 using System;
-using MVVM;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace TTT.Test
 {
-    public class TestView : ViewBase<TestViewModel>
+    public class TestView : ViewBase
     {
         public Text showText;
         public Button testBtn;
         public Slider testSlider;
 
-        void Start()
-        {
-            TestViewModel viewModel = new TestViewModel();
-            Open(viewModel);
-        }
+        public override Type ViewModelType { get => typeof(TestViewModel); }
+
+        public override UIRootType RootType { get => UIRootType.FUNCTION; }
 
         protected override void BindValues()
         {
-            BindValue(showText, _viewModel.numProperty, "text");
+            TestViewModel viewModel = _viewModel as TestViewModel;
+            if (viewModel == null)
+            {
+                return;
+            }
+            BindValue(showText, viewModel.numProperty, "text");
         }
 
         protected override void BindEvents()

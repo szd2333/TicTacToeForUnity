@@ -5,7 +5,7 @@ namespace TTT
     /// <summary>
     /// 单例创建器
     /// </summary>
-    public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+    public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static GameObject gObj = null;
         private static T _instance;
@@ -34,11 +34,16 @@ namespace TTT
                     else
                     {
                         gObj = _instance.gameObject;
-                        DontDestroyOnLoad(_instance.gameObject);
+                        DontDestroyOnLoad(gObj);
                     }
                     return _instance;
                 }
             }
+        }
+
+        public static GameObject GameObj
+        {
+            get => gObj;
         }
 
     }

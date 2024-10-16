@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using TTT;
 using UnityEngine;
 
-namespace MVVM
+namespace TTT
 {
     public class PropertyBinder
     {

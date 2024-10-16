@@ -1,4 +1,3 @@
-using MVVM;
 using UnityEngine;
 
 namespace TTT.Test

@@ -1,18 +1,29 @@
+using System;
 using UnityEngine;
 
-namespace MVVM
+namespace TTT
 {
-    public abstract class ViewBase<T> : MonoBehaviour where T : ViewModelBase
+    public abstract class ViewBase : MonoBehaviour
     {
-        protected T _viewModel;
+        protected object[] initParamObjects;
+        protected ViewModelBase _viewModel;
         private PropertyBinder _propertyBinder;
         private EventBinder _eventBinder;
 
         #region 公共方法
 
-        public void Open(T viewMdoel)
+        public abstract Type ViewModelType { get; }
+        public abstract UIRootType RootType { get; }
+
+        public void Open(object[] paramObjects, ViewModelBase viewModel)
         {
-            _viewModel = viewMdoel;
+            initParamObjects = paramObjects;
+            _viewModel = viewModel;
+            if (_viewModel == null)
+            {
+                Debug.LogError("viewModel不得为空");
+                return;
+            }
             BindValues();
             BindEvents();
             OnOpenFinish();
@@ -97,6 +108,7 @@ namespace MVVM
         protected void Dispose()
         {
             ClearBindValues();
+            ClearBindEvents();
         }
     }
 

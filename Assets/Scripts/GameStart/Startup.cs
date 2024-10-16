@@ -1,18 +1,40 @@
+using System;
+using TTT.Test;
+
 namespace TTT
 {
     /// <summary>
     /// 游戏入口
     /// </summary>
-    public class Startup : Singleton<Startup>
+    public class Startup : SingletonMonoBehaviour<Startup>
     {
         void Start()
         {
-            InitMgr();
+            _InitServices();
+            _StartGame();
         }
 
-        void InitMgr()
+        private void _InitServices()
         {
-            
+            _RegisterService(TicTacToeGame.TicTacToeGameService.Instance);
         }
+        
+        private void _StartGame()
+        {
+            UIManager.Init();
+            UIManager.Open("TestView");
+            //TicTacToeGame.TicTacToeGameService.StartGame();
+        }
+
+        private void _RegisterService(ServiceBase serviceBase)
+        {
+            if (serviceBase == null)
+            {
+                return;
+            }
+            serviceBase.OnInit();
+        }
+
+        
     }
 }

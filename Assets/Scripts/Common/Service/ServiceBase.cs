@@ -1,6 +1,6 @@
 namespace TTT
 {
-    public class ViewModelBase
+    public class ServiceBase : SingletonBase<ServiceBase>, IService
     {
         public virtual void OnInit()
         {
