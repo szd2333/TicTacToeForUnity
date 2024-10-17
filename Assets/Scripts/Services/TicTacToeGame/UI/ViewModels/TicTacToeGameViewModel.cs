@@ -11,6 +11,23 @@ namespace TTT.TicTacToeGame
             _InitAllPiecesViewModel();
         }
 
+        public override void OnActive()
+        {
+            TicTacToeGameService.OnGameStartEvent.AddListener(_OnGameStartEvent);
+            TicTacToeGameService.OnOperatePieceEvent.AddListener(_OnOperatePieceEvent);
+        }
+
+        public override void OnDispose()
+        {
+            TicTacToeGameService.OnGameStartEvent.RemoveListener(_OnGameStartEvent);
+            TicTacToeGameService.OnOperatePieceEvent.RemoveListener(_OnOperatePieceEvent);
+        }
+
+        private void _ResetView()
+        {
+            _ResetAllPiecesViewModel();
+        }
+
         #region 棋子子界面相关
 
         public TicTacToePiecesViewModel GetPiecesViewModelById(int id)
@@ -32,12 +49,45 @@ namespace TTT.TicTacToeGame
             }
         }
 
+        private void _ResetAllPiecesViewModel()
+        {
+            if (piecesViewModels == null)
+            {
+                return;
+            }
+
+            foreach (var subViewModel in piecesViewModels)
+            {
+                subViewModel.ResetView();
+            }
+        }
+
+        private void _ResetPiecesViewModel(int id)
+        {
+            var subViewModel = GetPiecesViewModelById(id);
+            if (subViewModel == null)
+            {
+                return;
+            }
+            subViewModel.ResetView();
+        }
+
         #endregion
 
         private void _OnClickPiece(int id)
         {
-            Debug.Log($"点击棋子{id}");
+            var curOperatePiecesType = TicTacToeGameMgr.GetCurOperatePiecesType();
+            TicTacToeGameMgr.TryOperatePieceById(id, curOperatePiecesType);
         }
-        
+
+        private void _OnGameStartEvent()
+        {
+            _ResetView();
+        }
+
+        private void _OnOperatePieceEvent(int id)
+        {
+            _ResetPiecesViewModel(id);
+        }
     }
 }

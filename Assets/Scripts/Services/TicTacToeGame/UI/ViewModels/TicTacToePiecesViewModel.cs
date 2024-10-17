@@ -20,6 +20,14 @@ namespace TTT.TicTacToeGame
         {
             this._id = id;
             this._clickCallback = clickCallback;
+            ResetView();
+        }
+
+        public void ResetView()
+        {
+            var curType = TicTacToeGameMgr.GetPiecesTypeById(this._id);
+            showXPieceGoProperty.value = curType == TicTacToePiecesType.X;
+            showOPieceGoProperty.value = curType == TicTacToePiecesType.O;
         }
 
         public void _OnClick()

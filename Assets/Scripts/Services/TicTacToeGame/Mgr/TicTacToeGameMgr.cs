@@ -10,7 +10,10 @@ namespace TTT.TicTacToeGame
         private TicTacToePiecesType _curOperatePiecesType = TicTacToePiecesType.Empty;
         //当前是否可操作
         private bool _isCurOperational = false;
- 
+
+
+        #region public接口
+
         public static void StartGame()
         {
             Start();
@@ -23,8 +26,19 @@ namespace TTT.TicTacToeGame
                 return;
             }
             SetPiecesType(row, column, operatePieceType);
+            int id = TicTacToeGameUtil.GetIdByRowAndColumn(row, column);
+            TicTacToeGameService.OnOperatePieceEvent.Invoke(id);
             FinishRound();
         }
+        
+        public static void TryOperatePieceById(int id, TicTacToePiecesType operatePieceType)
+        {
+            int row, column;
+            TicTacToeGameUtil.GetRowAndColumnById(id, out row, out column);
+            TryOperatePiece(row, column, operatePieceType);
+        }
+
+        #endregion
 
         private static void InitData()
         {
@@ -41,6 +55,7 @@ namespace TTT.TicTacToeGame
             {
                 UIManager.Open("TicTacToeGameView");
             }
+            TicTacToeGameService.OnGameStartEvent.Invoke();
             Debug.Log("开始");
             NextRound();
         }
@@ -63,18 +78,34 @@ namespace TTT.TicTacToeGame
             TicTacToePiecesType winType = TicTacToePiecesType.Empty;
             if (ExistsWinPiecesType(out winType))
             {
-                FinishGame();
+                FinishGame(winType);
+                return;
             }
-            else
+
+            if (!ExistsEmptyPieces())
             {
-                NextRound();
+                FinishGame(TicTacToePiecesType.Empty);
+                return;
             }
+            NextRound();
             Debug.Log("回合结束");
         }
         
-        private static void FinishGame()
+        private static void FinishGame(TicTacToePiecesType winType)
         {
-            Debug.Log("游戏结束");
+            switch (winType)
+            {
+                case TicTacToePiecesType.Empty :
+                    Debug.Log("游戏结束, 平局");
+                    break;
+                case TicTacToePiecesType.O :
+                    Debug.Log("游戏结束, O获胜");
+                    break;
+                case TicTacToePiecesType.X :
+                    Debug.Log("游戏结束, X获胜");
+                    break;
+            }
+            
             Start();
         }
 
@@ -100,13 +131,20 @@ namespace TTT.TicTacToeGame
             Instance._ticTacToeBoardData.SetPiecesType(row, column, pieceType);
         }
         
-        private static TicTacToePiecesType GetPiecesType(int row, int column)
+        public static TicTacToePiecesType GetPiecesType(int row, int column)
         {
             if (Instance._ticTacToeBoardData == null)
             {
                 return default;
             }
             return Instance._ticTacToeBoardData.GetPiecesType(row, column);
+        }
+        
+        public static TicTacToePiecesType GetPiecesTypeById(int id)
+        {
+            int row, column;
+            TicTacToeGameUtil.GetRowAndColumnById(id, out row, out column);
+            return GetPiecesType(row, column);
         }
 
         private static bool ExistsWinPiecesType(out TicTacToePiecesType winType)
@@ -118,6 +156,16 @@ namespace TTT.TicTacToeGame
             }
 
             return Instance._ticTacToeBoardData.ExistsWinPiecesType(out winType);
+        }
+        
+        private static bool ExistsEmptyPieces()
+        {
+            if (Instance._ticTacToeBoardData == null)
+            {
+                return false;
+            }
+
+            return Instance._ticTacToeBoardData.ExistsEmptyPieces();
         }
         
         #endregion
@@ -146,6 +194,11 @@ namespace TTT.TicTacToeGame
             }
         }
 
+        public static TicTacToePiecesType GetCurOperatePiecesType()
+        {
+            return Instance._curOperatePiecesType;
+        }
+
         private static bool CanOperatePiece(int row , int column, TicTacToePiecesType operatePieceType)
         {
             if (!GetIsCurOperational())
@@ -154,7 +207,8 @@ namespace TTT.TicTacToeGame
                 return false;
             }
 
-            if (operatePieceType == TicTacToePiecesType.Empty || Instance._curOperatePiecesType != operatePieceType)
+            var curOperatePiecesType = GetCurOperatePiecesType(); 
+            if (operatePieceType == TicTacToePiecesType.Empty || curOperatePiecesType != operatePieceType)
             {
                 Debug.Log("不在可操作阶段");
                 return false;

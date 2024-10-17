@@ -25,13 +25,13 @@ namespace TTT
             TicTacToeGame.TicTacToeGameService.StartGame();
         }
 
-        private void _RegisterService(ServiceBase serviceBase)
+        private void _RegisterService(IService iService)
         {
-            if (serviceBase == null)
+            if (iService == null)
             {
                 return;
             }
-            serviceBase.OnInit();
+            iService.OnInit();
         }
 
         

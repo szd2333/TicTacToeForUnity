@@ -52,18 +52,23 @@ namespace TTT.TicTacToeGame
             _ticTacToeBoard[row][column] = piecesType;
         }
 
-        public TicTacToePiecesType GetPiecesTypeById(int id)
+        public bool ExistsEmptyPieces()
         {
-            if (id < 0 || id >= TicTacToeGameConstant.ChessPiecesCount)
+            for (int row = 0; row < TicTacToeGameConstant.ChessPiecesRowCount; row++)
             {
-                Debug.LogError($"传入Id超出范围了, id:{id}");
-                return TicTacToePiecesType.Empty;
+                for (int column = 0; column < TicTacToeGameConstant.ChessPiecesColumnCount; column++)
+                {
+                    var piecesType = GetPiecesType(row, column);
+                    if (piecesType == TicTacToePiecesType.Empty)
+                    {
+                        return true;
+                    }
+                }
             }
-            int row = id / TicTacToeGameConstant.ChessPiecesColumnCount;
-            int column = id % TicTacToeGameConstant.ChessPiecesColumnCount;
-            return GetPiecesType(row, column);
+
+            return false;
         }
-        
+
         #endregion
 
         #region 胜利判定
@@ -142,7 +147,7 @@ namespace TTT.TicTacToeGame
         /// <returns></returns>
         public bool ExistsWinPiecesInDiagonal(bool isPrincipal, out TicTacToePiecesType winType)
         {
-            var startRow = isPrincipal ? 0 : TicTacToeGameConstant.ChessPiecesRowCount;
+            var startRow = isPrincipal ? 0 : TicTacToeGameConstant.ChessPiecesRowCount - 1;
             var rowMoveDirection = isPrincipal ? 1 : -1; //行计算方向
             var firstType = GetPiecesType(startRow, 0);
             var row = startRow;
