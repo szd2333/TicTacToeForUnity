@@ -76,8 +76,7 @@ namespace TTT.TicTacToeGame
 
         private void _OnClickPiece(int id)
         {
-            var curOperatePiecesType = TicTacToeGameMgr.GetCurOperatePiecesType();
-            TicTacToeGameMgr.TryOperatePieceById(id, curOperatePiecesType);
+            TicTacToeGameService.NotifyPieceUIClickEvent(id);
         }
 
         private void _OnGameStartEvent()

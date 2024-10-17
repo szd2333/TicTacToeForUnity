@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TTT.TicTacToeGame
@@ -10,6 +11,8 @@ namespace TTT.TicTacToeGame
         private TicTacToePiecesType _curOperatePiecesType = TicTacToePiecesType.Empty;
         //当前是否可操作
         private bool _isCurOperational = false;
+        //玩家控制器
+        private Dictionary<TicTacToePiecesType, PlayerController> _playerControllerDict;
 
 
         #region public接口
@@ -44,6 +47,12 @@ namespace TTT.TicTacToeGame
         {
             InitOperateData();
             InitBoardData();
+            InitPlayerControllers();
+        }
+
+        private static void DisposeData()
+        {
+            DisposePlayerControllers();
         }
 
         #region 流程相关
@@ -105,7 +114,7 @@ namespace TTT.TicTacToeGame
                     Debug.Log("游戏结束, X获胜");
                     break;
             }
-            
+            DisposeData();
             Start();
         }
 
@@ -194,7 +203,7 @@ namespace TTT.TicTacToeGame
             }
         }
 
-        public static TicTacToePiecesType GetCurOperatePiecesType()
+        private static TicTacToePiecesType GetCurOperatePiecesType()
         {
             return Instance._curOperatePiecesType;
         }
@@ -226,6 +235,7 @@ namespace TTT.TicTacToeGame
         private static void SetIsCurOperational(bool isCurOperational)
         {
             Instance._isCurOperational = isCurOperational;
+            ResetAllPlayerCtrlOperationalState();
         }
 
         public static bool GetIsCurOperational()
@@ -234,5 +244,51 @@ namespace TTT.TicTacToeGame
         }
         
         #endregion
+
+        #region 玩家控制器相关
+
+        private static void InitPlayerControllers()
+        {
+            //可以根据模式设置不同的玩家控制器
+            Instance._playerControllerDict = new Dictionary<TicTacToePiecesType, PlayerController>()
+            {
+                { TicTacToePiecesType.O, new PlayerController(TicTacToePiecesType.O, OperateControllerType.UIClick) },
+                { TicTacToePiecesType.X, new PlayerController(TicTacToePiecesType.X, OperateControllerType.UIClick)}
+            };
+        }
+
+        private static void DisposePlayerControllers()
+        {
+            if (Instance._playerControllerDict == null)
+            {
+                return;
+            }
+            foreach (var keyValuePair in Instance._playerControllerDict)
+            {
+                PlayerController playerCtrl = keyValuePair.Value;
+                playerCtrl.Dispose();
+            }
+            Instance._playerControllerDict.Clear();
+        }
+
+        private static void ResetAllPlayerCtrlOperationalState()
+        {
+            if (Instance._playerControllerDict == null)
+            {
+                return;
+            }
+
+            var curOperational = GetIsCurOperational();
+            var curOperatePiecesType = GetCurOperatePiecesType();
+            foreach (var keyValuePair in Instance._playerControllerDict)
+            {
+                PlayerController playerCtrl = keyValuePair.Value;
+                var playerPiecesType = playerCtrl.GetOperatePiecesType();
+                playerCtrl.SetIsCurOperational(curOperational && curOperatePiecesType == playerPiecesType);
+            }
+        }
+
+        #endregion
+        
     }
 }
