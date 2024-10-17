@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TTT
@@ -9,6 +10,7 @@ namespace TTT
         protected ViewModelBase _viewModel;
         private PropertyBinder _propertyBinder;
         private EventBinder _eventBinder;
+        private HashSet<ViewBase> _subViewHash = new HashSet<ViewBase>();
 
         #region 公共方法
 
@@ -24,9 +26,11 @@ namespace TTT
                 Debug.LogError("viewModel不得为空");
                 return;
             }
+            viewModel.OnInit();
             BindValues();
             BindEvents();
             OnOpenFinish();
+            viewModel.OnActive();
         }
 
         public void Close()
@@ -63,13 +67,13 @@ namespace TTT
 
         #region 绑定参数
 
-        protected void BindValue(Component component, Observer observer, string arg)
+        protected void BindValue(UnityEngine.Object bindObj, Observer observer, string arg)
         {
             if (_propertyBinder == null)
             {
                 _propertyBinder = new PropertyBinder();
             }
-            _propertyBinder.AddValueBinder(component, observer, arg);
+            _propertyBinder.AddValueBinder(bindObj, observer, arg);
         }
 
         protected void ClearBindValues()
@@ -104,11 +108,44 @@ namespace TTT
         }
 
         #endregion
+
+        #region 绑定子界面
+        protected void BindSubView(ViewBase subView, ViewModelBase subViewModel)
+        {
+            if (subView == null || subViewModel == null)
+            {
+                return;
+            }
+
+            if (_subViewHash.Contains(subView))
+            {
+                return;
+            }
+
+            _subViewHash.Add(subView);
+            subView.Open(null, subViewModel);
+        }
+
+        protected void ClearAllSubView()
+        {
+            foreach (ViewBase subView in _subViewHash)
+            {
+                subView.Close();
+            }
+            _subViewHash.Clear();
+        }
         
+        #endregion
+
         protected void Dispose()
         {
             ClearBindValues();
             ClearBindEvents();
+            ClearAllSubView();
+            if (_viewModel != null)
+            {
+                _viewModel.OnDispose();
+            }
         }
     }
 

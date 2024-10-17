@@ -3,19 +3,20 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
+using UObject = UnityEngine.Object;
 
 namespace TTT
 {
     public class DataBindUtil
     {
-        public static PropertyInfo GetCompPropInfo(Component component, string propName)
+        public static PropertyInfo GetUObjPropInfo(UObject uObj, string propName)
         {
-            if (goutil.IsNil(component) || string.IsNullOrEmpty(propName))
+            if (goutil.IsNil(uObj) || string.IsNullOrEmpty(propName))
             {
                 return null;
             }
 
-            var compType = component.GetType();
+            var compType = uObj.GetType();
             var propInfo = compType.GetProperty(propName);
 
             return propInfo;
@@ -23,7 +24,7 @@ namespace TTT
 
         public static object GetCompPropObj(Component component, string propName)
         {
-            var propInfo = GetCompPropInfo(component, propName);
+            var propInfo = GetUObjPropInfo(component, propName);
             if (propInfo == null)
             {
                 return null;

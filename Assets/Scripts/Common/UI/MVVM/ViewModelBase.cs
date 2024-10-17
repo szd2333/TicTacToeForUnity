@@ -6,5 +6,15 @@ namespace TTT
         {
             
         }
+        
+        public virtual void OnActive()
+        {
+            
+        }
+        
+        public virtual void OnDispose()
+        {
+            
+        }
     }
 }

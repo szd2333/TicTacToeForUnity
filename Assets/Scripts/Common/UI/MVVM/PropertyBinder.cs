@@ -1,36 +1,39 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UObject = UnityEngine.Object;
 
 namespace TTT
 {
     public class PropertyBinder
     {
-        private Dictionary<Component, Dictionary<Observer, Action>> _bindPropertyDict = new Dictionary<Component, Dictionary<Observer, Action>>();
+        private Dictionary<UObject, Dictionary<Observer, Action>> _bindPropertyDict = new Dictionary<UObject, Dictionary<Observer, Action>>();
         
-        public void AddValueBinder(Component component, Observer observer, string arg)
+        public void AddValueBinder(UObject bindObj, Observer observer, string arg)
         {
-            if (!_CanValueBinder(component, observer, arg))
+            if (!_CanValueBinder(bindObj, observer, arg))
             {
                 return;
             }
 
-            if (!_bindPropertyDict.ContainsKey(component))
+            if (!_bindPropertyDict.ContainsKey(bindObj))
             {
-                _bindPropertyDict[component] = new Dictionary<Observer, Action>();
+                _bindPropertyDict[bindObj] = new Dictionary<Observer, Action>();
             }
-            Dictionary<Observer, Action> actionDict = _bindPropertyDict[component];
+            Dictionary<Observer, Action> actionDict = _bindPropertyDict[bindObj];
             
             //已存在则移除旧的
             if (actionDict.ContainsKey(observer))
             {
-                _RemoveValueBinder(component, observer);
+                _RemoveValueBinder(bindObj, observer);
             }
             
             Action action = () =>
             {
-                _ValueBinderHandler(component, observer, arg);
+                _ValueBinderHandler(bindObj, observer, arg);
             };
+            
+            action.Invoke();
             observer.OnValueChanged += action;
             actionDict[observer] = action;
         }
@@ -54,19 +57,19 @@ namespace TTT
             _bindPropertyDict.Clear();
         }
 
-        private void _RemoveValueBinder(Component component, Observer observer)
+        private void _RemoveValueBinder(UObject bindObj, Observer observer)
         {
-            if (goutil.IsNil(component) || observer == null)
+            if (goutil.IsNil(bindObj) || observer == null)
             {
                 return;
             }
             
-            if (!_bindPropertyDict.ContainsKey(component))
+            if (!_bindPropertyDict.ContainsKey(bindObj))
             {
                 return;
             }
             
-            Dictionary<Observer, Action> actionDict = _bindPropertyDict[component];
+            Dictionary<Observer, Action> actionDict = _bindPropertyDict[bindObj];
             if (!actionDict.ContainsKey(observer))
             {
                 return;
@@ -75,9 +78,9 @@ namespace TTT
             observer.OnValueChanged -= action;
         }
 
-        private bool _CanValueBinder(Component component, Observer observer, string arg)
+        private bool _CanValueBinder(UObject bindObj, Observer observer, string arg)
         {
-            if (goutil.IsNil(component))
+            if (goutil.IsNil(bindObj))
             {
                 Debug.LogError($"绑定参数类型错误, component 不得为空");
                 return false;
@@ -95,31 +98,40 @@ namespace TTT
                 return false;
             }
             
-            var propInfo = DataBindUtil.GetCompPropInfo(component, arg);
+            var propInfo = DataBindUtil.GetUObjPropInfo(bindObj, arg);
             if (propInfo == null || propInfo.PropertyType != observer.valueType)
             {
                 string propTypeName = propInfo == null ? "null" : propInfo.PropertyType.Name;
-                Debug.LogError($"绑定参数类型错误, comp:{component.GetType()}, propTypeName:{arg}, compType:{propTypeName}, observer.valueType:{observer.valueType.Name}");
+                Debug.LogError($"绑定参数类型错误, comp:{bindObj.GetType()}, propTypeName:{arg}, compType:{propTypeName}, observer.valueType:{observer.valueType.Name}");
                 return false;
             }
             return true;
         }
 
-        private void _ValueBinderHandler(Component component, Observer observer, string arg)
+        private void _ValueBinderHandler(UObject bindObj, Observer observer, string arg)
         {
-            if (goutil.IsNil(component) || observer == null || string.IsNullOrEmpty(arg))
+            if (goutil.IsNil(bindObj) || observer == null || string.IsNullOrEmpty(arg))
             {
                 return;
             }
-            var propInfo = DataBindUtil.GetCompPropInfo(component, arg);
+            var propInfo = DataBindUtil.GetUObjPropInfo(bindObj, arg);
 
             if (propInfo == null || propInfo.PropertyType != observer.valueType)
             {
                 string propTypeName = propInfo == null ? "null" : propInfo.PropertyType.Name;
-                Debug.LogError($"绑定参数类型错误, comp:{component.GetType()}, propTypeName:{arg}, compType:{propTypeName}, observer.valueType:{observer.valueType.Name}");
+                Debug.LogError($"绑定参数类型错误, comp:{bindObj.GetType()}, propTypeName:{arg}, compType:{propTypeName}, observer.valueType:{observer.valueType.Name}");
                 return;
             }
-            propInfo.SetValue(component, observer.value);
+
+            try
+            {
+                propInfo.SetValue(bindObj, observer.value);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }
