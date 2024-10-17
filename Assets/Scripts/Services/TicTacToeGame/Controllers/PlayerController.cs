@@ -20,7 +20,10 @@ namespace TTT.TicTacToeGame
             this._operatePiecesType = operatePiecesType;
             this._operateControllerType = operateControllerType;
             var operateController = _CreateOperateController(operateControllerType);
-            operateController.InitData(this, TryOperatePiece);
+            if (operateController != null)
+            {
+                operateController.InitData(this, TryOperatePiece);
+            }
             this._operateController = operateController;
         }
 
@@ -36,6 +39,11 @@ namespace TTT.TicTacToeGame
         public TicTacToePiecesType GetOperatePiecesType()
         {
             return _operatePiecesType;
+        }
+
+        public OperateControllerType GetOperateControllerType()
+        {
+            return _operateControllerType;
         }
 
         public bool GetIsCurOperational()

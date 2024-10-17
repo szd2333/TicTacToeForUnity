@@ -66,12 +66,12 @@ namespace TTT.TicTacToeGame
             }
             TicTacToeGameService.OnGameStartEvent.Invoke();
             Debug.Log("开始");
-            NextRound();
+            RoundStart();
         }
 
         private static void NextRound()
         {
-            ResetCurOperatePiecesType();
+            SwitchCurOperatePiecesType();
             RoundStart();
         }
 
@@ -96,8 +96,8 @@ namespace TTT.TicTacToeGame
                 FinishGame(TicTacToePiecesType.Empty);
                 return;
             }
-            NextRound();
             Debug.Log("回合结束");
+            NextRound();
         }
         
         private static void FinishGame(TicTacToePiecesType winType)
@@ -185,22 +185,21 @@ namespace TTT.TicTacToeGame
         {
             Instance._curOperatePiecesType = TicTacToePiecesType.Empty;
             Instance._isCurOperational = false;
+            InitCurOperatePiecesType();
         }
 
-        private static void ResetCurOperatePiecesType()
+        private static void InitCurOperatePiecesType()
         {
-            switch (Instance._curOperatePiecesType)
-            {
-                case TicTacToePiecesType.Empty :
-                    Instance._curOperatePiecesType = TicTacToePiecesType.X;
-                    break;
-                case TicTacToePiecesType.O :
-                    Instance._curOperatePiecesType = TicTacToePiecesType.X;
-                    break;
-                case TicTacToePiecesType.X :
-                    Instance._curOperatePiecesType = TicTacToePiecesType.O;
-                    break;
-            }
+            //随机先手
+            int randomNum = Random.Range(0, 100);
+            Instance._curOperatePiecesType = randomNum > 50 ? TicTacToePiecesType.O : TicTacToePiecesType.X;
+            Debug.Log($"{Instance._curOperatePiecesType}先手");
+        }
+
+        private static void SwitchCurOperatePiecesType()
+        {
+            bool isO = Instance._curOperatePiecesType == TicTacToePiecesType.O;
+            Instance._curOperatePiecesType = isO ? TicTacToePiecesType.X : TicTacToePiecesType.O;
         }
 
         private static TicTacToePiecesType GetCurOperatePiecesType()
