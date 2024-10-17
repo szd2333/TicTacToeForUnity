@@ -4,7 +4,7 @@ namespace TTT.TicTacToeGame
     {
         public static void StartGame()
         {
-            
+            UIManager.Open("TicTacToeGameView");
         }
     }
 }
