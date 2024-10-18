@@ -28,5 +28,11 @@ namespace TTT.TicTacToeGame
             }
             return row * TicTacToeGameConstant.ChessPiecesColumnCount + column;
         }
+        
+        public static TicTacToePiecesType SwitchPiecesType(TicTacToePiecesType operatePiecesType)
+        {
+            bool isO = operatePiecesType == TicTacToePiecesType.O;
+            return isO ? TicTacToePiecesType.X : TicTacToePiecesType.O;
+        }
     }
 }

@@ -53,14 +53,15 @@ namespace TTT.TicTacToeGame
 
         public void SetIsCurOperational(bool isCurOperational)
         {
-            bool isChange = _isCurOperational == isCurOperational;
+            bool isChange = _isCurOperational != isCurOperational;
             _isCurOperational = isCurOperational;
-            if (isChange && _isCurOperational)
+        }
+
+        public void StartOperate()
+        {
+            if (_operateController != null)
             {
-                if (_operateController != null)
-                {
-                    _operateController.StartOperate();
-                }
+                _operateController.StartOperate();
             }
         }
 
@@ -80,6 +81,9 @@ namespace TTT.TicTacToeGame
             {
                 case OperateControllerType.UIClick :
                     result = new UIClickOperateController();
+                    break;
+                case OperateControllerType.AIMiniMax :
+                    result = new AIMiniMaxOperateController();
                     break;
                 default:
                     Debug.LogError($"传入不支持操作控制器类型:{operateControllerType}");

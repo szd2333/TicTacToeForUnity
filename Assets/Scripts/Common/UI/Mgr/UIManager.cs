@@ -144,7 +144,7 @@ namespace TTT
                 return null;
             }
 
-            string rootName = Enum.GetName(typeof(UIRootType), type);
+            string rootName = type.ToString();
             var typeRoot = uiRoot.Find(rootName);
             return typeRoot;
         }

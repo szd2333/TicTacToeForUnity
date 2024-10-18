@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TTT.TicTacToeGame
@@ -24,6 +25,21 @@ namespace TTT.TicTacToeGame
                 for (int column = 0; column < TicTacToeGameConstant.ChessPiecesColumnCount; column++)
                 {
                     _ticTacToeBoard[row][column] = TicTacToePiecesType.Empty;
+                }
+            }
+        }
+
+        public void CopyData(TicTacToeBoardData originBoardData)
+        {
+            if (originBoardData == null)
+            {
+                return;
+            }
+            for (int row = 0; row < TicTacToeGameConstant.ChessPiecesRowCount; row++)
+            {
+                for (int column = 0; column < TicTacToeGameConstant.ChessPiecesColumnCount; column++)
+                {
+                    _ticTacToeBoard[row][column] = originBoardData.GetPiecesType(row, column);
                 }
             }
         }
@@ -67,6 +83,11 @@ namespace TTT.TicTacToeGame
             }
 
             return false;
+        }
+        
+        public bool IsEmptyPiece(int row, int column)
+        {
+            return GetPiecesType(row, column) == TicTacToePiecesType.Empty;
         }
 
         #endregion

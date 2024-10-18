@@ -177,6 +177,20 @@ namespace TTT.TicTacToeGame
             return Instance._ticTacToeBoardData.ExistsEmptyPieces();
         }
         
+        public static bool IsEmptyPiece(int row, int column)
+        {
+            if (Instance._ticTacToeBoardData == null)
+            {
+                return false;
+            }
+            return Instance._ticTacToeBoardData.IsEmptyPiece(row, column);
+        }
+
+        public static TicTacToeBoardData GetBoardDataCopy()
+        {
+            return BoardDataPoolMgr.CopyBoardData(Instance._ticTacToeBoardData);
+        }
+        
         #endregion
 
         #region 操作信息相关
@@ -198,8 +212,7 @@ namespace TTT.TicTacToeGame
 
         private static void SwitchCurOperatePiecesType()
         {
-            bool isO = Instance._curOperatePiecesType == TicTacToePiecesType.O;
-            Instance._curOperatePiecesType = isO ? TicTacToePiecesType.X : TicTacToePiecesType.O;
+            Instance._curOperatePiecesType = TicTacToeGameUtil.SwitchPiecesType(Instance._curOperatePiecesType);
         }
 
         private static TicTacToePiecesType GetCurOperatePiecesType()
@@ -252,7 +265,7 @@ namespace TTT.TicTacToeGame
             Instance._playerControllerDict = new Dictionary<TicTacToePiecesType, PlayerController>()
             {
                 { TicTacToePiecesType.O, new PlayerController(TicTacToePiecesType.O, OperateControllerType.UIClick) },
-                { TicTacToePiecesType.X, new PlayerController(TicTacToePiecesType.X, OperateControllerType.UIClick)}
+                { TicTacToePiecesType.X, new PlayerController(TicTacToePiecesType.X, OperateControllerType.AIMiniMax)}
             };
         }
 
@@ -276,7 +289,7 @@ namespace TTT.TicTacToeGame
             {
                 return;
             }
-
+            
             var curOperational = GetIsCurOperational();
             var curOperatePiecesType = GetCurOperatePiecesType();
             foreach (var keyValuePair in Instance._playerControllerDict)
@@ -284,6 +297,11 @@ namespace TTT.TicTacToeGame
                 PlayerController playerCtrl = keyValuePair.Value;
                 var playerPiecesType = playerCtrl.GetOperatePiecesType();
                 playerCtrl.SetIsCurOperational(curOperational && curOperatePiecesType == playerPiecesType);
+            }
+
+            if (curOperational && Instance._playerControllerDict.ContainsKey(curOperatePiecesType))
+            {
+                Instance._playerControllerDict[curOperatePiecesType].StartOperate();
             }
         }
 
