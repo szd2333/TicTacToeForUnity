@@ -207,7 +207,7 @@ namespace TTT.TicTacToeGame
             //随机先手
             int randomNum = Random.Range(0, 100);
             Instance._curOperatePiecesType = randomNum > 50 ? TicTacToePiecesType.O : TicTacToePiecesType.X;
-            Debug.Log($"{Instance._curOperatePiecesType}先手");
+            Debug.Log($"{Instance._curOperatePiecesType}先手, randomNum:{randomNum}");
         }
 
         private static void SwitchCurOperatePiecesType()

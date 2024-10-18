@@ -77,6 +77,7 @@ namespace TTT.TicTacToeGame
                 }
             }
             BoardDataPoolMgr.ReleaseBoardData(newBoardData);
+            score = resultScore;
             return resultPos;
         }
 
