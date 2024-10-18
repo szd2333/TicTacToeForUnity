@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TTT.TicTacToeGame
 {
@@ -7,12 +8,19 @@ namespace TTT.TicTacToeGame
     {
 
         public Transform piecesContainer;
+        public Text tipText;
         
         public override Type ViewModelType { get => typeof(TicTacToeGameViewModel); }
         public override UIRootType RootType { get => UIRootType.FUNCTION; }
         
         protected override void BindValues()
         {
+            TicTacToeGameViewModel viewModel = _GetTicTacToeGameViewModel();
+            if (viewModel == null)
+            {
+                return;
+            }
+            BindValue(tipText, viewModel.tipTextProperty, "text");
             BindAllPieceView();
         }
 

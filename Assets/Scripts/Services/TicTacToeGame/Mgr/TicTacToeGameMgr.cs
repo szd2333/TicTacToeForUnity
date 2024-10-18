@@ -75,7 +75,7 @@ namespace TTT.TicTacToeGame
             }
             TicTacToeGameService.OnGameStartEvent.Invoke();
             Debug.Log("开始");
-            SetDelayInvokeTimer(1, RoundStart);
+            SetDelayInvokeTimer(0.5f, RoundStart);
         }
 
         private static void NextRound()
@@ -125,7 +125,8 @@ namespace TTT.TicTacToeGame
                     break;
             }
             DisposeData();
-            SetDelayInvokeTimer(1, OpenSettingView);
+            TicTacToeGameService.OnGameFinishEvent.Invoke(winType);
+            SetDelayInvokeTimer(1.5f, OpenSettingView);
         }
 
         #endregion
