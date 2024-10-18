@@ -5,9 +5,14 @@ namespace TTT.TicTacToeGame
 {
     public class AIMiniMaxOperateController : OperateControllerBase
     {
-        public override void StartOperate()
+        public override void OnInit()
         {
-            _TryOperate();
+            TicTacToeGameService.OnRoundStartEvent.AddListener(_OnRoundStartEvent);
+        }
+
+        public override void Dispose()
+        {
+            TicTacToeGameService.OnRoundStartEvent.RemoveListener(_OnRoundStartEvent);
         }
 
         private void _TryOperate()
@@ -113,6 +118,15 @@ namespace TTT.TicTacToeGame
         {
             var curOperateType = _playerCtrl.GetOperatePiecesType();
             return curOperateType == operateType;
+        }
+
+        private void _OnRoundStartEvent(TicTacToePiecesType operateType)
+        {
+            if (!IsCurOperateType(operateType))
+            {
+                return;
+            }
+            _TryOperate();
         }
     }
 }

@@ -23,10 +23,5 @@ namespace TTT.TicTacToeGame
         {
             
         }
-
-        public virtual void StartOperate()
-        {
-            
-        }
     }
 }

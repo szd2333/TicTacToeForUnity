@@ -57,14 +57,6 @@ namespace TTT.TicTacToeGame
             _isCurOperational = isCurOperational;
         }
 
-        public void StartOperate()
-        {
-            if (_operateController != null)
-            {
-                _operateController.StartOperate();
-            }
-        }
-
         private void TryOperatePiece(int id)
         {
             if (!GetIsCurOperational())

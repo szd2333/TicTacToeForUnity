@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 namespace TTT.TicTacToeGame
@@ -83,6 +84,7 @@ namespace TTT.TicTacToeGame
         {
             SetIsCurOperational(true);
             Debug.Log("回合开始");
+            TicTacToeGameService.OnRoundStartEvent.Invoke(GetCurOperatePiecesType());
         }
         
         private static void FinishRound()
@@ -302,11 +304,6 @@ namespace TTT.TicTacToeGame
                 var playerPiecesType = playerCtrl.GetOperatePiecesType();
                 playerCtrl.SetIsCurOperational(curOperational && curOperatePiecesType == playerPiecesType);
             }
-
-            if (curOperational && Instance._playerControllerDict.ContainsKey(curOperatePiecesType))
-            {
-                Instance._playerControllerDict[curOperatePiecesType].StartOperate();
-            }
         }
 
         #endregion
@@ -332,8 +329,6 @@ namespace TTT.TicTacToeGame
             Instance._delayInvokeTimer = null;
             timer.Stop();
         }
-        
-
 
         #endregion
         
