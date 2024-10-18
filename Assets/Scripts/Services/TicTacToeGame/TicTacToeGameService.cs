@@ -9,6 +9,7 @@ namespace TTT.TicTacToeGame
         private UnityEvent<TicTacToePiecesType> m_OnRoundStartEvent;
         private UnityEvent<int> m_OnOperatePieceEvent;
         private UnityEvent<int> m_OnPieceUIClickEvent;
+        private UnityEvent<TicTacToePiecesType> m_OnPlayerSettingChangeEvent;
 
         //游戏开始事件
         public static UnityEvent OnGameStartEvent { get => Instance.m_OnGameStartEvent; }
@@ -18,6 +19,8 @@ namespace TTT.TicTacToeGame
         public static UnityEvent<int> OnOperatePieceEvent { get => Instance.m_OnOperatePieceEvent; }
         //点击棋子UI事件
         public static UnityEvent<int> OnPieceUIClickEvent { get => Instance.m_OnPieceUIClickEvent; }
+        //玩家设置改变
+        public static UnityEvent<TicTacToePiecesType> OnPlayerSettingChangeEvent { get => Instance.m_OnPlayerSettingChangeEvent; }
 
         public void OnInit()
         {
@@ -25,6 +28,8 @@ namespace TTT.TicTacToeGame
             Instance.m_OnRoundStartEvent = new UnityEvent<TicTacToePiecesType>();
             m_OnOperatePieceEvent = new UnityEvent<int>();
             m_OnPieceUIClickEvent = new UnityEvent<int>();
+            m_OnPlayerSettingChangeEvent = new UnityEvent<TicTacToePiecesType>();
+            TicTacToeGameSaveMgr.Init();
         }
 
         public static void OpenSettingView()

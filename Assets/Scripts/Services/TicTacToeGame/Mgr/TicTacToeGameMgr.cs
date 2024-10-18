@@ -274,8 +274,8 @@ namespace TTT.TicTacToeGame
             //可以根据模式设置不同的玩家控制器
             Instance._playerControllerDict = new Dictionary<TicTacToePiecesType, PlayerController>()
             {
-                { TicTacToePiecesType.O, new PlayerController(TicTacToePiecesType.O, OperateControllerType.UIClick) },
-                { TicTacToePiecesType.X, new PlayerController(TicTacToePiecesType.X, OperateControllerType.AIMiniMax)}
+                { TicTacToePiecesType.O, new PlayerController(TicTacToePiecesType.O, TicTacToeGameSaveMgr.GetOperateControllerType(TicTacToePiecesType.O)) },
+                { TicTacToePiecesType.X, new PlayerController(TicTacToePiecesType.X, TicTacToeGameSaveMgr.GetOperateControllerType(TicTacToePiecesType.X))}
             };
         }
 

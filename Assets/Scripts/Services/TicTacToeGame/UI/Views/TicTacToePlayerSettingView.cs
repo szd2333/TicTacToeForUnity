@@ -32,13 +32,13 @@ namespace TTT.TicTacToeGame
                 return;
             }
             BindValue(this, viewModel.manModeSelectGoProperty, "manModeSelectGoActive");
-            BindValue(this, viewModel.machineModeSelectGoProperty, "machineModeSelectGo");
+            BindValue(this, viewModel.machineModeSelectGoProperty, "machineModeSelectGoActive");
         }
         
         protected override void BindEvents()
         {
-            BindEvent(manModeSelectBtn, "onClick", "_OnClick");
-            BindEvent(machineModeSelectBtn, "onClick", "_OnClick");
+            BindEvent(manModeSelectBtn, "onClick", "_OnClickManModeSelectBtn");
+            BindEvent(machineModeSelectBtn, "onClick", "_OnClickMachineModeSelectBtn");
         }
     }
 }

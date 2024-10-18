@@ -132,6 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8361129114107030713}
+  - component: {fileID: 9005185690727705972}
   m_Layer: 5
   m_Name: TicTacToePlayerSettingView
   m_TagString: Untagged
@@ -160,6 +161,22 @@ RectTransform:
   m_AnchoredPosition: {x: -253, y: -48}
   m_SizeDelta: {x: 300, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &9005185690727705972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778638997183516090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33ca25c9e52a43b0bf45b91bd5f91c03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manModeSelectBtn: {fileID: 5046764625706069327}
+  manModeSelectGo: {fileID: 6808808079152673844}
+  machineModeSelectBtn: {fileID: 4983429372854565599}
+  machineModeSelectGo: {fileID: 8522473943592942718}
 --- !u!1 &1929087557991612580
 GameObject:
   m_ObjectHideFlags: 0
