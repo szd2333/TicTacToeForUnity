@@ -52,6 +52,10 @@ namespace TTT
             Instance._openingViewHashSet.Add(viewName);
             Action<UnityEngine.Object, bool> loadCallback = (obj, isSuccess) =>
             {
+                if (!IsOpen(viewName))
+                {
+                    return;
+                }
                 if (obj == null || !isSuccess)
                 {
                     Close(viewName);
@@ -69,7 +73,20 @@ namespace TTT
             {
                 return;
             }
-            
+            if (IsOpening(viewName))
+            {
+                Instance._openingViewHashSet.Remove(viewName);
+                return;
+            }
+
+            if (!Instance._oepnFinishViewDict.ContainsKey(viewName))
+            {
+                return;
+            }
+
+            ViewBase view = Instance._oepnFinishViewDict[viewName];
+            Instance._oepnFinishViewDict.Remove(viewName);
+            view.Close();
         }
 
         public static bool IsOpen(string viewName)
@@ -78,11 +95,18 @@ namespace TTT
             {
                 return true;
             }
-            if (Instance._openingViewHashSet.Contains(viewName))
+            
+            if (IsOpening(viewName))
             {
                 return true;
             }
+            
             return false;
+        }
+
+        public static bool IsOpening(string viewName)
+        {
+            return Instance._openingViewHashSet.Contains(viewName);
         }
         
         private static void _LoadViewFinsh(string viewName, GameObject prefab, object[] initParams)

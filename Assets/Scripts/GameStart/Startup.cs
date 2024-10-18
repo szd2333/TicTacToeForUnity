@@ -22,7 +22,7 @@ namespace TTT
         private void _StartGame()
         {
             UIManager.Init();
-            TicTacToeGame.TicTacToeGameService.StartGame();
+            TicTacToeGame.TicTacToeGameService.OpenSettingView();
         }
 
         private void _RegisterService(IService iService)

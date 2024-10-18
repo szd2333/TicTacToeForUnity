@@ -65,6 +65,10 @@ namespace TTT.TicTacToeGame
         private static void Start()
         {
             InitData();
+            if (UIManager.IsOpen("TicTacToeSettingView"))
+            {
+                UIManager.Close("TicTacToeSettingView");
+            }
             if(!UIManager.IsOpen("TicTacToeGameView"))
             {
                 UIManager.Open("TicTacToeGameView");
@@ -121,7 +125,7 @@ namespace TTT.TicTacToeGame
                     break;
             }
             DisposeData();
-            SetDelayInvokeTimer(1, Start);
+            SetDelayInvokeTimer(1, OpenSettingView);
         }
 
         #endregion
@@ -331,6 +335,14 @@ namespace TTT.TicTacToeGame
         }
 
         #endregion
+
+        public static void OpenSettingView()
+        {
+            if(!UIManager.IsOpen("TicTacToeSettingView"))
+            {
+                UIManager.Open("TicTacToeSettingView");
+            }
+        }
         
     }
 }

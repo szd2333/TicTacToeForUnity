@@ -64,6 +64,7 @@ namespace TTT
         {
             _RegisterView(typeof(Test.TestView), "prefabs/services/test/ui");
             _RegisterView(typeof(TicTacToeGame.TicTacToeGameView), "prefabs/services/tictactoegame/ui", true);
+            _RegisterView(typeof(TicTacToeGame.TicTacToeSettingView), "prefabs/services/tictactoegame/ui", true);
         }
 
         private static void _RegisterView(Type viewType, string prefabBundleName, bool isFullScreenView = false)

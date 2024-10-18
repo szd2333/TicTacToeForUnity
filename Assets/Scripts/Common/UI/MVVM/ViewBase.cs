@@ -36,6 +36,7 @@ namespace TTT
         public void Close()
         {
             Dispose();
+            Destroy(gameObject);
             OnCloseFinish();
         }
 

@@ -5,6 +5,8 @@ namespace TTT.TicTacToeGame
 {
     public class AIMiniMaxOperateController : OperateControllerBase
     {
+        private Timer _delayInvokeTimer;
+        
         public override void OnInit()
         {
             TicTacToeGameService.OnRoundStartEvent.AddListener(_OnRoundStartEvent);
@@ -13,6 +15,7 @@ namespace TTT.TicTacToeGame
         public override void Dispose()
         {
             TicTacToeGameService.OnRoundStartEvent.RemoveListener(_OnRoundStartEvent);
+            ClearDelayInvokeTimer();
         }
 
         private void _TryOperate()
@@ -119,6 +122,26 @@ namespace TTT.TicTacToeGame
             var curOperateType = _playerCtrl.GetOperatePiecesType();
             return curOperateType == operateType;
         }
+        
+        private void SetDelayInvokeTimer(float seconds, Action callback)
+        {
+            ClearDelayInvokeTimer();
+            var timer = new Timer(seconds);
+            _delayInvokeTimer = timer;
+            timer.onEnd += callback;
+        }
+
+        private void ClearDelayInvokeTimer()
+        {
+            if (_delayInvokeTimer == null)
+            {
+                return;
+            }
+
+            Timer timer = _delayInvokeTimer;
+            _delayInvokeTimer = null;
+            timer.Stop();
+        }
 
         private void _OnRoundStartEvent(TicTacToePiecesType operateType)
         {
@@ -126,7 +149,7 @@ namespace TTT.TicTacToeGame
             {
                 return;
             }
-            _TryOperate();
+            SetDelayInvokeTimer(0.2f, _TryOperate);
         }
     }
 }

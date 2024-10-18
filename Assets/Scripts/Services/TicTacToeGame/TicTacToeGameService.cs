@@ -27,9 +27,9 @@ namespace TTT.TicTacToeGame
             m_OnPieceUIClickEvent = new UnityEvent<int>();
         }
 
-        public static void StartGame()
+        public static void OpenSettingView()
         {
-            TicTacToeGameMgr.StartGame();
+            TicTacToeGameMgr.OpenSettingView();
         }
 
         public static void NotifyPieceUIClickEvent(int id)
