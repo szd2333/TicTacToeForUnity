@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace TTT.TicTacToeGame
 {
@@ -13,6 +15,8 @@ namespace TTT.TicTacToeGame
         private bool _isCurOperational = false;
         //玩家控制器
         private Dictionary<TicTacToePiecesType, PlayerController> _playerControllerDict;
+        //延迟触发器
+        private Timer _delayInvokeTimer;
 
 
         #region public接口
@@ -66,13 +70,13 @@ namespace TTT.TicTacToeGame
             }
             TicTacToeGameService.OnGameStartEvent.Invoke();
             Debug.Log("开始");
-            RoundStart();
+            SetDelayInvokeTimer(1, RoundStart);
         }
 
         private static void NextRound()
         {
             SwitchCurOperatePiecesType();
-            RoundStart();
+            SetDelayInvokeTimer(1, RoundStart);
         }
 
         private static void RoundStart()
@@ -115,7 +119,7 @@ namespace TTT.TicTacToeGame
                     break;
             }
             DisposeData();
-            Start();
+            SetDelayInvokeTimer(1, Start);
         }
 
         #endregion
@@ -304,6 +308,32 @@ namespace TTT.TicTacToeGame
                 Instance._playerControllerDict[curOperatePiecesType].StartOperate();
             }
         }
+
+        #endregion
+
+        #region Timer相关
+
+        private static void SetDelayInvokeTimer(float seconds, Action callback)
+        {
+            ClearDelayInvokeTimer();
+            var timer = new Timer(seconds);
+            Instance._delayInvokeTimer = timer;
+            timer.onEnd += callback;
+        }
+
+        private static void ClearDelayInvokeTimer()
+        {
+            if (Instance._delayInvokeTimer == null)
+            {
+                return;
+            }
+
+            Timer timer = Instance._delayInvokeTimer;
+            Instance._delayInvokeTimer = null;
+            timer.Stop();
+        }
+        
+
 
         #endregion
         
